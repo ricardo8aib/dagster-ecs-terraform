@@ -16,6 +16,14 @@ Make sure to configure your AWS CLI with the appropriate credentials:
 aws configure
 ```
 
+## Customization
+
+You can customize the AWS account ID, region, and repository names in the `Makefile`:
+
+- **AWS_ACCOUNT_ID**: Your AWS account number.
+- **AWS_REGION**: The AWS region where your resources are deployed.
+- **CODE_LOCATION_REPO_NAME, WEBSERVER_REPO_NAME, DAEMON_REPO_NAME**: Names of your Docker repositories.
+
 ## Key Commands
 
 ### 1. Initialize Terraform
@@ -42,7 +50,12 @@ To build and push the Docker images to AWS ECR, run:
 make build_and_push
 ```
 
-### 4. Deploy ECS Services
+### 4. Add code locations code to S3 bucket
+
+Copy the `dagster-code-location` folder in the recently created S3 bucket.
+This will trigger a DataSync task and will sync the files with the EFS.
+
+### 5. Deploy ECS Services
 
 To deploy the ECS services using Terraform, run:
 
@@ -50,18 +63,18 @@ To deploy the ECS services using Terraform, run:
 make deploy_services
 ```
 
-### 5. Destroy All Infrastructure
+### 6. Explore the Dagster UI
+
+To start using Dagster, navigate to the created ALB and locate the DNS. Copy the DNS into your browser to explore the Dagster UI.
+
+```bash
+make deploy_services
+```
+
+### 7. Destroy All Infrastructure
 
 To destroy all resources managed by Terraform, run:
 
 ```bash
 make terraform_destroy
 ```
-
-## Customization
-
-You can customize the AWS account ID, region, and repository names in the `Makefile`:
-
-- **AWS_ACCOUNT_ID**: Your AWS account number.
-- **AWS_REGION**: The AWS region where your resources are deployed.
-- **CODE_LOCATION_REPO_NAME, WEBSERVER_REPO_NAME, DAEMON_REPO_NAME**: Names of your Docker repositories.
