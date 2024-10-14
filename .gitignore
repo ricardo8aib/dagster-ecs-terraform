@@ -161,5 +161,35 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-# Ignore .DS_Store files
+# Ignore .DS_Store files    
 .DS_Store
+
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+
+# Terraform plan files
+*.tfplan
+
+# Directory for Terraform's workspace and related metadata
+.terraform/
+
+# Override files (local configurations)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Sensitive variable files
+*.tfvars
+*.tfvars.json
+
+# Ignore generated execution plan files
+*.tfplan
+
+# Ignore lock file for Terraform providers
+.terraform.lock.hcl
