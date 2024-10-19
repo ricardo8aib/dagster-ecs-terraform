@@ -253,104 +253,6 @@ variable "DATASYNC_TASK_NAME" {
 }
 
 # --------------------------------------------------------------------------------------------------------
-# ECS Variables
-# --------------------------------------------------------------------------------------------------------
-
-# General Variables
-variable "ECS_CLUSTER_NAME" {
-  description = "The name of the ECS cluster"
-  type        = string
-  default     = "dagster-cluster"
-}
-
-variable "NAMESPACE_NAME" {
-  description = "The name of Namespace"
-  type        = string
-  default     = "dagster-services-namespace"
-}
-
-variable "CODE_LOCATION_TASK_FAMILY_NAME" {
-  description = "The name of the code location task family"
-  type        = string
-  default     = "dagster-code-location-task-definition"
-}
-
-variable "CODE_LOCATION_CONTAINER_NAME" {
-  description = "The name of the code location container"
-  type        = string
-  default     = "dagster-code-location"
-}
-
-variable "CODE_LOCATION_MODULE_PATH" {
-  description = "The name or path of the module that will be used to start the code location server."
-  type        = string
-  default     = "dagster_university"
-}
-
-variable "CODE_LOCATION_VOLUME_NAME" {
-  description = "The name of the volume that will be created for the code location container."
-  type        = string
-  default     = "dagster-efs-volume"
-}
-
-variable "EFS_CODE_LOCATION_VOLUME_PATH" {
-  description = "The path in the EFS that will be attached to the container."
-  type        = string
-  default     = "/dagster-code-location"
-}
-
-# Dagster Runs variables
-variable "DAGSTER_RUNS_TASK_FAMILY_NAME" {
-  description = "The name of the Dagster runs task family"
-  type        = string
-  default     = "dagster-runs-task-definition"
-}
-
-variable "DAGSTER_RUNS_CONTAINER_NAME" {
-  description = "The name of the dagster runs container"
-  type        = string
-  default     = "dagster-run"
-}
-
-variable "DAEMON_TASK_FAMILY_NAME" {
-  description = "The name of the Daemon task family"
-  type        = string
-  default     = "dagster-daemon-task-definition"
-}
-
-variable "DAEMON_CONTAINER_NAME" {
-  description = "The name of the Daemon container"
-  type        = string
-  default     = "dagster-daemon"
-}
-
-variable "WEBSERVER_TASK_FAMILY_NAME" {
-  description = "The name of the Web Server task family"
-  type        = string
-  default     = "dagster-webserver-task-definition"
-}
-
-variable "WEBSERVER_CONTAINER_NAME" {
-  description = "The name of the Daemon container"
-  type        = string
-  default     = "dagster-webserver"
-}
-
-# ALB Variables
-variable "ALB_TARGET_GROUP_NAME" {
-  description = "The name of target group for the ALB"
-  type        = string
-  default     = "dagster-webserver-alb-TG"
-}
-
-variable "WEBSERVER_ALB_NAME" {
-  description = "The name of the WebServer ALB"
-  type        = string
-  default     = "dagster-webserver-alb"
-}
-
-
-# --------------------------------------------------------------------------------------------------------
 # StepFunction StateMachine Variables
 # --------------------------------------------------------------------------------------------------------
 
@@ -388,4 +290,115 @@ variable "EVENTBRIDGE_TARGET_EXECUTION_POLICY_NAME" {
   description = "The name of the EventBridge Target Execution Policy Name"
   type        = string
   default     = "dagster_datasync_eventbridge_target_execution_policy"
+}
+
+# --------------------------------------------------------------------------------------------------------
+# ECS Variables
+# --------------------------------------------------------------------------------------------------------
+
+# General Variables
+variable "ECS_CLUSTER_NAME" {
+  description = "The name of the ECS cluster"
+  type        = string
+  default     = "dagster-cluster"
+}
+
+variable "NAMESPACE_NAME" {
+  description = "The name of Namespace"
+  type        = string
+  default     = "dagster-services-namespace"
+}
+
+# Daemon variables
+variable "DAEMON_TASK_FAMILY_NAME" {
+  description = "The name of the Daemon task family"
+  type        = string
+  default     = "dagster-daemon-task-definition"
+}
+
+variable "DAEMON_CONTAINER_NAME" {
+  description = "The name of the Daemon container"
+  type        = string
+  default     = "dagster-daemon"
+}
+
+# Webserver variables
+variable "WEBSERVER_TASK_FAMILY_NAME" {
+  description = "The name of the Web Server task family"
+  type        = string
+  default     = "dagster-webserver-task-definition"
+}
+
+variable "WEBSERVER_CONTAINER_NAME" {
+  description = "The name of the Daemon container"
+  type        = string
+  default     = "dagster-webserver"
+}
+
+# ALB Variables
+variable "ALB_TARGET_GROUP_NAME" {
+  description = "The name of target group for the ALB"
+  type        = string
+  default     = "dagster-webserver-alb-TG"
+}
+
+variable "WEBSERVER_ALB_NAME" {
+  description = "The name of the WebServer ALB"
+  type        = string
+  default     = "dagster-webserver-alb"
+}
+
+# --------------------------------------------------------------------------------------------------------
+# Code Locations Config Variables
+# --------------------------------------------------------------------------------------------------------
+
+variable "CODE_LOCATIONS_DICT" {
+  description = "A dictionary with the code location parameters"
+  type = map(object({
+    environment               = string # Test, Dev or Prod
+    task_family_name          = string # The name of the Task family for the Code Location
+    container_name            = string # The name of the container for the Code Location
+    repo_name                 = string # This will be used to get the image
+    region                    = string # This will be used to get the image
+    accountnumber             = string # This will be used to get the image
+    module_path               = string # The path of the EFS (Or S3) that will be attached to the container.
+    code_location_volume_name = string # The name of the volume that will be created for the code location container
+    efs_volume_path           = string # The path in the EFS that will be attached to the container
+  }))
+
+  default = {
+    "backend_dev" = {
+      environment               = "dev"
+      task_family_name          = "dagster-backend-dev-task-definition"
+      container_name            = "backend-dev"
+      repo_name                 = "backend"
+      region                    = "us-east-1"
+      accountnumber             = "668221262652"
+      module_path               = "backend_dev"
+      code_location_volume_name = "dagster-efs-volume"
+      efs_volume_path           = ""
+    },
+    "finance_dev" = {
+      environment               = "dev"
+      task_family_name          = "dagster-backend-dev-task-definition"
+      container_name            = "backend-dev"
+      repo_name                 = "finance"
+      region                    = "us-east-1"
+      accountnumber             = "668221262652"
+      module_path               = "backend_dev"
+      code_location_volume_name = "dagster-efs-volume"
+      efs_volume_path           = ""
+    },
+    "marketing_dev" = {
+      environment               = "dev"
+      task_family_name          = "dagster-backend-dev-task-definition"
+      container_name            = "backend-dev"
+      repo_name                 = "marketing"
+      region                    = "us-east-1"
+      accountnumber             = "668221262652"
+      module_path               = "backend_dev"
+      code_location_volume_name = "dagster-efs-volume"
+      efs_volume_path           = ""
+    }
+}
 }

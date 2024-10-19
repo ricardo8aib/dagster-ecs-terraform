@@ -1,5 +1,5 @@
-variable "DAGSTER_CODE_LOCATION_ECR_REPO_NAME" {
-  description = "The name of the code location ECR repository"
+variable "CODE_LOCATIONS_DICT" {
+  description = "A dictionary with the code location parameters"
 }
 
 variable "DAGSTER_WEB_SERVER_ECR_REPO_NAME" {

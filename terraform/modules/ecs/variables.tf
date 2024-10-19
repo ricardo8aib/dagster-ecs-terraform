@@ -58,59 +58,6 @@ variable "DAGSTER_SERVICES_SG" {
 }
 
 # --------------------------------------------------------------------------------------------------------
-# CODE LOCATION Variables
-# --------------------------------------------------------------------------------------------------------
-
-variable "CODE_LOCATION_TASK_FAMILY_NAME" {
-  description = "The name of the code location task family"
-  type        = string
-}
-
-variable "SUBNET_IDS_FOR_DAGSTER_CODE_LOCATION" {
-  description = "List with subnet ids"
-  type        = list
-}
-
-variable "CODE_LOCATION_CONTAINER_NAME" {
-  description = "The name of the code location container"
-  type        = string
-}
-
-variable "CODE_LOCATION_IMAGE" {
-  description = "The code location image"
-  type        = string
-}
-
-variable "CODE_LOCATION_MODULE_PATH" {
-  description = "The name or path of the module that will be used to start the code location server."
-  type        = string
-}
-
-variable "CODE_LOCATION_VOLUME_NAME" {
-  description = "The name of the volume that will be created for the code location container."
-  type        = string
-}
-
-variable "EFS_CODE_LOCATION_VOLUME_PATH" {
-  description = "The path in the EFS that will be attached to the container."
-  type        = string
-}
-
-# --------------------------------------------------------------------------------------------------------
-# DAGSTER RUNS Variables
-# --------------------------------------------------------------------------------------------------------
-
-variable "DAGSTER_RUNS_TASK_FAMILY_NAME" {
-  description = "The name of the Dagster runs task family"
-  type        = string
-}
-
-variable "DAGSTER_RUNS_CONTAINER_NAME" {
-  description = "The name of the dagster runs container"
-  type        = string
-}
-
-# --------------------------------------------------------------------------------------------------------
 # DAEMON Variables
 # --------------------------------------------------------------------------------------------------------
 
@@ -180,4 +127,28 @@ variable "ALB_TARGET_GROUP_NAME" {
 variable "SUBNET_IDS_FOR_ALB" {
   description = "List with subnet ids"
   type        = list
+}
+
+# --------------------------------------------------------------------------------------------------------
+# CODE LOCATIONS Variables
+# --------------------------------------------------------------------------------------------------------
+
+variable "CODE_LOCATIONS_DICT" {
+  description = "A dictionary with the code location parameters"
+  type = map(object({
+    environment               = string # Test, Dev or Prod
+    task_family_name          = string # The name of the Task family for the Code Location
+    container_name            = string # The name of the container for the Code Location
+    repo_name                 = string # This will be used to get the image
+    region                    = string # This will be used to get the image
+    accountnumber             = string # This will be used to get the image
+    module_path               = string # The path of the EFS (Or S3) that will be attached to the container.
+    code_location_volume_name = string # The name of the volume that will be created for the code location container
+    efs_volume_path           = string # The path in the EFS that will be attached to the container
+  }))
+}
+
+variable "SUBNET_IDS_FOR_DAGSTER_CODE_LOCATION" {
+  description = "List of subnet IDs for Dagster Code Location ECS Service (private subnet recommended)"
+  type        = list(string)
 }

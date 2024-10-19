@@ -75,7 +75,7 @@ resource "aws_ecs_service" "webserver" {
   name             = var.WEBSERVER_CONTAINER_NAME
   task_definition  = aws_ecs_task_definition.webserver_task_definition.arn
   desired_count    = 1
-  depends_on       = [aws_ecs_cluster.dagster_cluster, aws_ecs_service.code_location]
+  depends_on       = [aws_ecs_cluster.dagster_cluster]
 
   # Network configuration
   network_configuration {
