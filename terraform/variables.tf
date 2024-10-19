@@ -363,7 +363,6 @@ variable "CODE_LOCATIONS_DICT" {
     accountnumber             = string # This will be used to get the image
     module_path               = string # The path of the EFS (Or S3) that will be attached to the container.
     code_location_volume_name = string # The name of the volume that will be created for the code location container
-    efs_volume_path           = string # The path in the EFS that will be attached to the container
   }))
 
   default = {
@@ -371,34 +370,31 @@ variable "CODE_LOCATIONS_DICT" {
       environment               = "dev"
       task_family_name          = "dagster-backend-dev-task-definition"
       container_name            = "backend-dev"
-      repo_name                 = "backend"
+      repo_name                 = "dagster-backend-dev"
       region                    = "us-east-1"
       accountnumber             = "668221262652"
-      module_path               = "backend_dev"
-      code_location_volume_name = "dagster-efs-volume"
-      efs_volume_path           = ""
+      module_path               = "dev/backend"
+      code_location_volume_name = "dagster-efs-volume-for-backend-dev"
     },
     "finance_dev" = {
       environment               = "dev"
-      task_family_name          = "dagster-backend-dev-task-definition"
-      container_name            = "backend-dev"
-      repo_name                 = "finance"
+      task_family_name          = "dagster-finance-dev-task-definition"
+      container_name            = "finance-dev"
+      repo_name                 = "dagster-finance-dev"
       region                    = "us-east-1"
       accountnumber             = "668221262652"
-      module_path               = "backend_dev"
-      code_location_volume_name = "dagster-efs-volume"
-      efs_volume_path           = ""
+      module_path               = "dev/finance"
+      code_location_volume_name = "dagster-efs-volume-for-finance-dev"
     },
     "marketing_dev" = {
       environment               = "dev"
-      task_family_name          = "dagster-backend-dev-task-definition"
-      container_name            = "backend-dev"
-      repo_name                 = "marketing"
+      task_family_name          = "dagster-marketing-dev-task-definition"
+      container_name            = "marketing-dev"
+      repo_name                 = "dagster-marketing-dev"
       region                    = "us-east-1"
       accountnumber             = "668221262652"
-      module_path               = "backend_dev"
-      code_location_volume_name = "dagster-efs-volume"
-      efs_volume_path           = ""
+      module_path               = "dev/marketing"
+      code_location_volume_name = "dagster-efs-volume-for-marketing-dev"
     }
 }
 }

@@ -144,7 +144,6 @@ variable "CODE_LOCATIONS_DICT" {
     accountnumber             = string # This will be used to get the image
     module_path               = string # The path of the EFS (Or S3) that will be attached to the container.
     code_location_volume_name = string # The name of the volume that will be created for the code location container
-    efs_volume_path           = string # The path in the EFS that will be attached to the container
   }))
 }
 
