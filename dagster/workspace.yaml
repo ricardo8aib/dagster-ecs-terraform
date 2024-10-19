@@ -1,6 +1,26 @@
 load_from:
   # Each entry here corresponds to a service in the docker-compose file that exposes jobs.
   - grpc_server:
-      host: dagster-code-location
+      host: backend-dev
       port: 4000
-      location_name: "example_jobs"
+      location_name: "backend_dev"
+  
+  - grpc_server:
+      host: marketing-dev
+      port: 4000
+      location_name: "marketing_dev"
+  
+  - grpc_server:
+      host: finance-dev
+      port: 4000
+      location_name: "finance_dev"
+  
+  - grpc_server:
+      host: fraud-dev
+      port: 4000
+      location_name: "fraud_dev"
+  
+  - grpc_server:
+      host: servicing-dev
+      port: 4000
+      location_name: "servicing_dev"

@@ -7,11 +7,9 @@ ENV DAGSTER_HOME=/opt/dagster/dagster_home/
 RUN mkdir -p $DAGSTER_HOME
 WORKDIR $DAGSTER_HOME
 COPY dagster.yaml workspace.yaml $DAGSTER_HOME
-# RUN git clone https://github.com/dagster-io/dagster.git
 RUN pip install \
     dagster \
-    dagster-aws \
-    dagster-postgres
+    dagster-aws 
 
 # Webserver
 FROM dagster AS webserver
@@ -19,11 +17,34 @@ RUN pip install \
     dagster-webserver \
     dagster-graphql
 
-# Code location
-FROM dagster AS user_code
+# Data Engineering Backend
+FROM dagster AS backend_dev
 
-RUN pip install dagster-duckdb
-RUN pip install duckdb
-RUN pip install plotly
-RUN pip install geopandas
+RUN pip install dagster-postgres
+RUN pip install dagster-dbt
+RUN pip install dagster-slack
+RUN pip install dagster-pandas
+RUN pip install dagster-snowflake
+RUN pip install dagster-embedded-elt
 
+
+# Marketing
+FROM dagster AS marketing_dev
+
+RUN pip install dagster-postgres
+RUN pip install dagster-dbt
+
+# Finance
+FROM dagster AS finance_dev
+
+RUN pip install dagster-dbt
+
+# Fraud
+FROM dagster AS fraud_dev
+
+RUN pip install dagster-dbt
+
+# Servicing & Operations
+FROM dagster AS servicing_dev
+
+RUN pip install dagster-dbt
