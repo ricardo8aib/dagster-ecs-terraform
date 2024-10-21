@@ -142,7 +142,8 @@ variable "CODE_LOCATIONS_DICT" {
     repo_name                 = string # This will be used to get the image
     region                    = string # This will be used to get the image
     accountnumber             = string # This will be used to get the image
-    module_path               = string # The path of the EFS (Or S3) that will be attached to the container.
+    module_path               = string # The folder with the assets. This will be initialized by the dagster bash command.
+    volume_path               = string # The path of the EFS (Or S3) that will be attached to the container.
     code_location_volume_name = string # The name of the volume that will be created for the code location container
   }))
 }

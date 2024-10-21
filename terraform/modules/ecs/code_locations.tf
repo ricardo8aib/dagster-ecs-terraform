@@ -52,12 +52,13 @@ resource "aws_ecs_task_definition" "runs_task_definitions" {
           hostPort      = 4000
           protocol      = "tcp"
           appProtocol   = "grpc"
+          name          = "${each.value.container_name}"
         }
       ]
 
       mountPoints = [
         {
-          sourceVolume  = "${each.value.efs_volume_name}"
+          sourceVolume  = "${each.value.code_location_volume_name}"
           containerPath = "/opt/dagster/dagster_home"
           readOnly      = false
         }
@@ -78,11 +79,11 @@ resource "aws_ecs_task_definition" "runs_task_definitions" {
   ])
 
   volume {
-    name = "${each.value.efs_volume_name}"
+    name = "${each.value.code_location_volume_name}"
 
     efs_volume_configuration {
       file_system_id     = var.EFS_ID
-      root_directory     = "${each.value.module_path}"
+      root_directory     = "${each.value.volume_path}"
       transit_encryption = "ENABLED"
     }
   }
@@ -125,7 +126,7 @@ resource "aws_ecs_task_definition" "task_definitions" {
         },
         {
           name  = "DAGSTER_CONTAINER_CONTEXT"
-          value = "{\"ecs\": {\"task_definition_arn\": \"arn:aws:ecs:${each.value.region}:${each.value.accountnumber}:task-definition/${each.value.task_family_name}-runs\", \"container_name\": \"${each.value.container_name}-runs\", \"volumes\": [{\"name\": \"${each.value.efs_volume_name}\", \"efsVolumeConfiguration\": {\"fileSystemId\": \"${var.EFS_ID}\", \"rootDirectory\": \"/${each.value.module_path}\"}}], \"mount_points\": [{\"sourceVolume\": \"${each.value.efs_volume_name}\", \"containerPath\": \"/opt/dagster/dagster_home\"}]}}"
+          value = "{\"ecs\": {\"task_definition_arn\": \"arn:aws:ecs:${each.value.region}:${each.value.accountnumber}:task-definition/${each.value.task_family_name}-runs\", \"container_name\": \"${each.value.container_name}-runs\", \"volumes\": [{\"name\": \"${each.value.code_location_volume_name}\", \"efsVolumeConfiguration\": {\"fileSystemId\": \"${var.EFS_ID}\", \"rootDirectory\": \"/${each.value.volume_path}\"}}], \"mount_points\": [{\"sourceVolume\": \"${each.value.code_location_volume_name}\", \"containerPath\": \"/opt/dagster/dagster_home\"}]}}"
         },
         {
           name  = "DAGSTER_CURRENT_IMAGE"
@@ -151,12 +152,13 @@ resource "aws_ecs_task_definition" "task_definitions" {
           hostPort      = 4000
           protocol      = "tcp"
           appProtocol   = "grpc"
+          name          = "${each.value.container_name}"
         }
       ]
 
       mountPoints = [
         {
-          sourceVolume  = "${each.value.efs_volume_name}"
+          sourceVolume  = "${each.value.code_location_volume_name}"
           containerPath = "/opt/dagster/dagster_home"
           readOnly      = false
         }
@@ -174,17 +176,19 @@ resource "aws_ecs_task_definition" "task_definitions" {
         }
       }
     }
-  ])
+  ]
+  )
 
   volume {
-    name = "${each.value.efs_volume_name}"
+    name = "${each.value.code_location_volume_name}"
 
     efs_volume_configuration {
       file_system_id     = var.EFS_ID
-      root_directory     = "${each.value.module_path}"
+      root_directory     = "${each.value.volume_path}"
       transit_encryption = "ENABLED"
     }
   }
+  depends_on = [aws_ecs_task_definition.runs_task_definitions]
 }
 
 
@@ -193,6 +197,7 @@ resource "aws_ecs_task_definition" "task_definitions" {
 # --------------------------------------------------------------------------------------------------------
 # Code location service
 resource "aws_ecs_service" "code_location" {
+  
   for_each         = var.CODE_LOCATIONS_DICT
   # Compute configuration
   cluster          = aws_ecs_cluster.dagster_cluster.id
@@ -203,7 +208,7 @@ resource "aws_ecs_service" "code_location" {
   name             = "${each.value.container_name}"
   task_definition  = "arn:aws:ecs:${each.value.region}:${each.value.accountnumber}:task-definition/${each.value.task_family_name}"
   desired_count    = 1
-  depends_on       = [aws_ecs_cluster.dagster_cluster]
+  depends_on       = [aws_ecs_cluster.dagster_cluster, aws_ecs_task_definition.task_definitions]
 
   # Network configuration
   network_configuration {
@@ -225,5 +230,4 @@ resource "aws_ecs_service" "code_location" {
       }
     }
   }
-
 }

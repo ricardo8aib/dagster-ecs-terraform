@@ -9,6 +9,7 @@ WORKDIR $DAGSTER_HOME
 COPY dagster.yaml workspace.yaml $DAGSTER_HOME
 RUN pip install \
     dagster \
+    dagster-postgres \
     dagster-aws 
 
 # Webserver
@@ -19,8 +20,6 @@ RUN pip install \
 
 # Data Engineering Backend
 FROM dagster AS backend_dev
-
-RUN pip install dagster-postgres
 RUN pip install dagster-dbt
 RUN pip install dagster-slack
 RUN pip install dagster-pandas
@@ -30,21 +29,16 @@ RUN pip install dagster-embedded-elt
 
 # Marketing
 FROM dagster AS marketing_dev
-
-RUN pip install dagster-postgres
 RUN pip install dagster-dbt
 
 # Finance
 FROM dagster AS finance_dev
-
 RUN pip install dagster-dbt
 
 # Fraud
 FROM dagster AS fraud_dev
-
 RUN pip install dagster-dbt
 
 # Servicing & Operations
 FROM dagster AS servicing_dev
-
 RUN pip install dagster-dbt

@@ -361,7 +361,8 @@ variable "CODE_LOCATIONS_DICT" {
     repo_name                 = string # This will be used to get the image
     region                    = string # This will be used to get the image
     accountnumber             = string # This will be used to get the image
-    module_path               = string # The path of the EFS (Or S3) that will be attached to the container.
+    module_path               = string # The folder with the assets. This will be initialized by the dagster bash command.
+    volume_path               = string # The path of the EFS (Or S3) that will be attached to the container.
     code_location_volume_name = string # The name of the volume that will be created for the code location container
   }))
 
@@ -373,7 +374,8 @@ variable "CODE_LOCATIONS_DICT" {
       repo_name                 = "dagster-backend-dev"
       region                    = "us-east-1"
       accountnumber             = "668221262652"
-      module_path               = "dev/backend"
+      module_path               = "backend"
+      volume_path               = "dev"
       code_location_volume_name = "dagster-efs-volume-for-backend-dev"
     },
     "finance_dev" = {
@@ -383,7 +385,8 @@ variable "CODE_LOCATIONS_DICT" {
       repo_name                 = "dagster-finance-dev"
       region                    = "us-east-1"
       accountnumber             = "668221262652"
-      module_path               = "dev/finance"
+      module_path               = "finance"
+      volume_path               = "dev"
       code_location_volume_name = "dagster-efs-volume-for-finance-dev"
     },
     "marketing_dev" = {
@@ -393,8 +396,31 @@ variable "CODE_LOCATIONS_DICT" {
       repo_name                 = "dagster-marketing-dev"
       region                    = "us-east-1"
       accountnumber             = "668221262652"
-      module_path               = "dev/marketing"
+      module_path               = "marketing"
+      volume_path               = "dev"
       code_location_volume_name = "dagster-efs-volume-for-marketing-dev"
+    },
+    "fraud_dev" = {
+      environment               = "dev"
+      task_family_name          = "dagster-fraud-dev-task-definition"
+      container_name            = "fraud-dev"
+      repo_name                 = "dagster-fraud-dev"
+      region                    = "us-east-1"
+      accountnumber             = "668221262652"
+      module_path               = "fraud"
+      volume_path               = "dev"
+      code_location_volume_name = "dagster-efs-volume-for-fraud-dev"
+    },
+    "servicign_dev" = {
+      environment               = "dev"
+      task_family_name          = "dagster-servicing-dev-task-definition"
+      container_name            = "servicing-dev"
+      repo_name                 = "dagster-servicing-dev"
+      region                    = "us-east-1"
+      accountnumber             = "668221262652"
+      module_path               = "servicing-and-operations"
+      volume_path               = "dev"
+      code_location_volume_name = "dagster-efs-volume-for-servicing-dev"
     }
 }
 }
