@@ -14,9 +14,6 @@ run_launcher:
     include_sidecars: true
     secrets_tag: ""
 
-run_queue:
-  max_concurrent_runs: 2000
-
 
 run_storage:
   module: dagster_postgres.run_storage
