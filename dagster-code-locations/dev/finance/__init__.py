@@ -1,26 +1,11 @@
-from dagster import graph, op, schedule
+from dagster import asset, Definitions
 
 
-@op
-def hello():
-    return 1
+@asset
+def finance_dummy_asset():
+    return "Hello, Dagster!"
 
 
-@op
-def goodbye(foo):
-    if foo != 1:
-        raise Exception("Bad io manager")
-    return foo * 2
-
-
-@graph
-def my_graph():
-    goodbye(hello())
-
-
-my_job = my_graph.to_job(name="my_job")
-
-
-@schedule(cron_schedule="* * * * *", job=my_job, execution_timezone="US/Central")
-def my_schedule(_context):
-    return {}
+defs = Definitions(
+    assets=[finance_dummy_asset],
+)
