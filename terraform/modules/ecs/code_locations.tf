@@ -22,7 +22,6 @@ resource "aws_ecs_task_definition" "runs_task_definitions" {
       image      = "${each.value.accountnumber}.dkr.ecr.${each.value.region}.amazonaws.com/${each.value.repo_name}"
       cpu        = 0
       essential  = true
-      entryPoint = ["dagster", "code-server", "start", "-h", "0.0.0.0", "-p", "4000", "-m", "${each.value.module_path}"]
       environment = [
         {
           name  = "DAGSTER_POSTGRES_USER"
