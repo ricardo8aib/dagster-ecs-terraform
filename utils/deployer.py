@@ -67,6 +67,7 @@ class Deployer:
 
             print(f"Tagging {service} image...")
             tag_command = f"docker tag {repo_tag}:latest {uri}:latest"
+            self.run_command(tag_command)
 
     def docker_push(self) -> None:
         """Push Docker images to ECR."""
